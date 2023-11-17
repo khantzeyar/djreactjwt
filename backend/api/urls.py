@@ -7,4 +7,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('register/', views.register, name='register'),
+    path('user/', views.current_user, name='user'),
 ]
