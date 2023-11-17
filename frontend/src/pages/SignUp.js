@@ -9,7 +9,10 @@ function SignUpCode(){
   const[password, setPassword] = useState('')
   const navigate = useNavigate();
 
-  const handleSignIn = async () => {
+  const handleSignUp = () => {
+    navigate("/signin");
+  };
+  const handleSignIn = () => {
       navigate("/signin");
   };
 
@@ -24,7 +27,7 @@ function SignUpCode(){
         <input type="password" onChange={(e) => setPassword(e.target.value)}/>
       </label>
       <p>
-        <Button variant="contained">
+        <Button variant="contained" onClick={handleSignUp}>
           Sign Up
         </Button>
       </p>
