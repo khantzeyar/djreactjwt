@@ -10,24 +10,18 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //Redirects the user if they aren't signed in.
-    if (localStorage.getItem('accessToken') === null) {
-        navigate("/signin");
-    }
-    else{
-        const accessToken = localStorage.getItem('accessToken');
-        axios.get('http://127.0.0.1:8000/api/user', {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-            },
-        })
+    const accessToken = localStorage.getItem('accessToken');
+    axios.get('http://127.0.0.1:8000/api/user', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+      })
         .then(response => {
-          setUser(response.data.user);
-        })
+        setUser(response.data.user);
+      })
         .catch(error => {
-          alert(error);
-        });
-    }
+        alert(error);
+      });
   });
     return (
         <div>
