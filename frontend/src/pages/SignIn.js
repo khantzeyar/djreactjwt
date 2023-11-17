@@ -35,7 +35,7 @@ function SignUpCode(){
 
   return (
     <form>
-      <h2>Sign Up</h2>
+      <h2>Sign In</h2>
       <label>User Name:{' '} 
        <input type="text" onChange={(e) => setUsername(e.target.value)}/>
       </label>
