@@ -4,12 +4,14 @@ import SignUp from "./pages/SignUp"
 import Home from "./pages/Home"
 import About from "./pages/About"
 
+//Redirects the user to the Sign In page if they aren't signed in.
 const PrivateRoute = ({ element }) => {
   const isAuthenticated = !!localStorage.getItem('accessToken');
   if (isAuthenticated){
     return element
   }
   else {
+    //Stores the address of the last page they visited while not logged in. When they sign in, they will be redirected to this page.
     localStorage.setItem('logoutRedirect', window.location.pathname);
     return <Navigate to="/signin" replace />
   }

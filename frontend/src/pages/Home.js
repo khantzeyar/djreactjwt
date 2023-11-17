@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import SignOutButton from '../ui/SignOutButton';
 
@@ -7,8 +6,8 @@ axios.defaults.withCredentials = true
 
 function Home() {
   const [user, setUser] = useState('');
-  const navigate = useNavigate();
 
+  //Displays the user's username when they enter the homepage.
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken');
     axios.get('http://127.0.0.1:8000/api/user', {
