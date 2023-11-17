@@ -25,8 +25,16 @@ function SignUpCode(){
         const accessToken = response.data.access;
         alert("Sign In Success!\nAccess Token: " + accessToken)
         localStorage.setItem('accessToken', accessToken);
-        //Go to home page
-        navigate("/");
+        //Handling navigation
+        const redirectURL = localStorage.getItem('logoutRedirect');
+        if (redirectURL === null) {
+          window.location.replace("/");
+        }
+        else
+        {
+          window.location.replace(redirectURL);
+          localStorage.removeItem('logoutRedirect');
+        }
     }catch (error){
         alert("Sign In Failed!\n " + error)
     }
