@@ -25,6 +25,9 @@ function SignUpCode(){
         const accessToken = response.data.access;
         alert("Sign In Success!\nAccess Token: " + accessToken)
         localStorage.setItem('accessToken', accessToken);
+        //Store the refresh token
+        const refreshToken = response.data.refresh;
+        localStorage.setItem('refreshToken', refreshToken);
         //Handling navigation
         const redirectURL = localStorage.getItem('logoutRedirect');
         if (redirectURL === null) {

@@ -25,7 +25,10 @@ function SignUpCode(){
         const accessToken = response.data.access;
         alert("Sign Up Success!\nAccess Token: " + accessToken)
         localStorage.setItem('accessToken', accessToken);
-        //Go to home page
+        //Store the refresh token
+        const refreshToken = response.data.refresh;
+        localStorage.setItem('refreshToken', refreshToken);
+        //Go to sign in page
         navigate("/signin");
     }catch (error){
         alert("Sign Up Failed!\n" + error)

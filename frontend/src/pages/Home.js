@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import SignOutButton from '../ui/SignOutButton';
+import RefreshAccessToken from '../RefreshAccessToken';
 
 axios.defaults.withCredentials = true
 
@@ -9,6 +10,7 @@ function Home() {
 
   //Displays the user's username when they enter the homepage.
   useEffect(() => {
+    RefreshAccessToken();
     const accessToken = localStorage.getItem('accessToken');
     axios.get('http://127.0.0.1:8000/api/user', {
         headers: {
