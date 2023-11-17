@@ -3,14 +3,30 @@ import './App.css';
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
+axios.defaults.withCredentials = true
 
 function SignUpCode(){
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
   const navigate = useNavigate();
 
-  const handleSignIn = ()=> {
-    navigate("/");
+  const handleSignIn = async ()=> {
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/token/', {
+            username,
+            password
+        });
+        //Store the access token
+        const accessToken = response.data.access;
+        alert("Access Token: " + accessToken)
+        localStorage.setItem('accessToken', accessToken);
+        //Go to home page
+        navigate("/");
+    }catch (error){
+        alert(error)
+    }
   };
 
   const handleSignUp = () => {
