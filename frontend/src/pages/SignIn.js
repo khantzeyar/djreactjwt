@@ -8,10 +8,13 @@ import axios from 'axios';
 axios.defaults.withCredentials = true
 
 function SignUpCode(){
+  //Keep track of changes to username and password
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
+  
   const navigate = useNavigate();
-
+  
+  //Signs In the user through Django
   const handleSignIn = async ()=> {
     try {
         const response = await axios.post('http://127.0.0.1:8000/api/token/', {
@@ -29,6 +32,7 @@ function SignUpCode(){
     }
   };
 
+  //Lets the user visit the Sign Up page if they don't have an account
   const handleSignUp = () => {
       navigate("/signup");
   };

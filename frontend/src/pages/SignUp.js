@@ -5,13 +5,17 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
 function SignUpCode(){
+  //Keep track of changes to username and password
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
+
   const navigate = useNavigate();
 
   const handleSignUp = () => {
     navigate("/signin");
   };
+
+  //Lets the user access the Sign In page if they don't have an account
   const handleSignIn = () => {
       navigate("/signin");
   };
