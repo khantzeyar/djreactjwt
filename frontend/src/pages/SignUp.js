@@ -3,6 +3,9 @@ import './App.css';
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
+axios.defaults.withCredentials = true
 
 function SignUpCode(){
   //Keep track of changes to username and password
@@ -11,8 +14,22 @@ function SignUpCode(){
 
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
-    navigate("/signin");
+  //Uses Django to handle the regsitrations for the app
+  const handleSignUp = async ()=> {
+    try {
+        const response = await axios.post('http://127.0.0.1:8000/api/register/', {
+            username,
+            password
+        });
+        //Store the access token
+        const accessToken = response.data.access;
+        alert("Sign Up Success!\nAccess Token: " + accessToken)
+        localStorage.setItem('accessToken', accessToken);
+        //Go to home page
+        navigate("/signin");
+    }catch (error){
+        alert("Sign Up Failed!\n" + error)
+    }
   };
 
   //Lets the user access the Sign In page if they don't have an account

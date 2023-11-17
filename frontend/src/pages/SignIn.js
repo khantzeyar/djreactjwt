@@ -11,7 +11,7 @@ function SignUpCode(){
   //Keep track of changes to username and password
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
-  
+
   const navigate = useNavigate();
   
   //Signs In the user through Django
@@ -23,12 +23,12 @@ function SignUpCode(){
         });
         //Store the access token
         const accessToken = response.data.access;
-        alert("Access Token: " + accessToken)
+        alert("Sign In Success!\nAccess Token: " + accessToken)
         localStorage.setItem('accessToken', accessToken);
         //Go to home page
         navigate("/");
     }catch (error){
-        alert(error)
+        alert("Sign In Failed!\n " + error)
     }
   };
 

@@ -24,4 +24,4 @@ def register(request):
     refresh_token = RefreshToken.for_user(user)
     access_token = str(refresh_token.access_token)
 
-    return Response({'access_token': access_token}, status=status.HTTP_201_CREATED)
+    return Response({'access': access_token}, status=status.HTTP_201_CREATED)
