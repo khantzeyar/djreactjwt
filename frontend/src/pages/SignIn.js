@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -42,6 +42,20 @@ function SignUpCode(){
         alert("Sign In Failed!\n " + error)
     }
   };
+  useEffect(() => {
+    const isAuthenticated = !!localStorage.getItem('accessToken');
+    if (isAuthenticated){
+      const redirectURL = localStorage.getItem('logoutRedirect');
+        if (redirectURL === null) {
+          window.location.replace("/");
+        }
+        else
+        {
+          window.location.replace(redirectURL);
+          localStorage.removeItem('logoutRedirect');
+        }
+    }
+  });
 
   //Lets the user visit the Sign Up page if they don't have an account
   const handleSignUp = () => {
