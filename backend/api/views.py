@@ -29,8 +29,7 @@ def register(request):
     return Response({'access': access_token, 'refresh': str(refresh_token)}, status=status.HTTP_201_CREATED)
 
 class LoginView(APIView):
-    permission_classes = [AllowAny
-                          ]
+    permission_classes = [AllowAny]
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
