@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from django.dispatch import receiver
 
 # Create your views here.
 @api_view(['POST'])
@@ -59,3 +61,14 @@ def logout_view(request):
 def current_user(request):
     user = request.user
     return Response({'user':user.username})
+
+@receiver(user_logged_in)
+def post_login(sender, user, request, **kwargs):
+    refresh_token = RefreshToken.for_user(user)
+    access_token = str(refresh_token.access_token)
+    print("refresh: " + str(refresh_token) + "\n")
+    print("access: " + str(access_token))
+
+@receiver(user_logged_out)
+def post_logout(sender, user, request, **kwargs):
+    print("logged out")
