@@ -6,7 +6,7 @@ const RefreshAccessToken = async() =>{
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
         try {
-            const response = await axios.post('http://127.0.0.1:8000/api/token/refresh/', { refresh: refreshToken });
+            const response = await axios.post('http://127.0.0.1:8000/api/refresh/', { refresh: refreshToken });
             const newAccessToken = response.data.access;
             const newRefreshToken = response.data.refresh;
             localStorage.setItem('accessToken', newAccessToken);
