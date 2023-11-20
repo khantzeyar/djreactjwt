@@ -24,7 +24,7 @@ def register(request):
     refresh_token = RefreshToken.for_user(user)
     access_token = str(refresh_token.access_token)
 
-    return Response({'access': access_token}, status=status.HTTP_201_CREATED)
+    return Response({'access': access_token, 'refresh': str(refresh_token)}, status=status.HTTP_201_CREATED)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
