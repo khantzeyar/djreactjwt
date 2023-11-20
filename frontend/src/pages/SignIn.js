@@ -28,20 +28,12 @@ function SignUpCode(){
         //Store the refresh token
         const refreshToken = response.data.refresh;
         localStorage.setItem('refreshToken', refreshToken);
-        //Handling navigation
-        const redirectURL = localStorage.getItem('logoutRedirect');
-        if (redirectURL === null) {
-          window.location.replace("/");
-        }
-        else
-        {
-          window.location.replace(redirectURL);
-          localStorage.removeItem('logoutRedirect');
-        }
+        window.location.reload();
     }catch (error){
         alert("Sign In Failed!\n " + error)
     }
   };
+  //Handling navigation
   useEffect(() => {
     const isAuthenticated = !!localStorage.getItem('accessToken');
     if (isAuthenticated){
