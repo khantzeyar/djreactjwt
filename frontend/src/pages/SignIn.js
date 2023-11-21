@@ -7,7 +7,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true
 
-function SignUpCode(){
+function SignInCode(){
   //Keep track of changes to username and password
   const[username, setUsername] = useState('')
   const[password, setPassword] = useState('')
@@ -49,6 +49,23 @@ function SignUpCode(){
     }
   });
 
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8000/ws/auth/");
+    socket.onopen = () => {
+      alert("WebSocket connection established.");
+    };
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      alert(data)
+    };
+    socket.onclose = () => {
+      alert("WebSocket connection closed.");
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
+
   //Lets the user visit the Sign Up page if they don't have an account
   const handleSignUp = () => {
       navigate("/signup");
@@ -79,7 +96,7 @@ function SignIn() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-          <SignUpCode />
+          <SignInCode />
       </header>
     </div>
   );
