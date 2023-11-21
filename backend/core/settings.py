@@ -84,7 +84,7 @@ SIMPLE_JWT = {
 }
 
 #Use Channels as the ASGI application
-ASGI_APPLICATION = 'core.routing.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
 #Configure the channel layer with Redis
 CHANNEL_LAYERS = {
