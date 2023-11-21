@@ -1,28 +1,23 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.signals import user_logged_in, user_logged_out
-from rest_framework_simplejwt.tokens import RefreshToken
+
 import json
 
 class AuthorisationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
+        await self.channel_layer.group_add("auth_group", self.channel_name)
+        await self.send_hello_world()
 
     async def disconnect(self, close_code):
-        pass
+        await self.channel_layer.group_discard("auth_group", self.channel_name)
 
-    def send_notification(self, message):
-        message_data = {
-            "type": "notification.message",
-            "message": message,
-        }
-        self.send(json.dumps(message_data))
+    async def send_hello_world(self):
+        await self.send_notification("Hello World!")
     
-    def post_login(self, sender, user, request, **kwargs):
-        refresh_token = RefreshToken.for_user(user)
-        access_token = str(refresh_token.access_token)
-        message = f"refresh: {refresh_token}\naccess: {access_token}"
-        self.send_notification(message)
+    async def send_notification(self, message):
+        message_data = {
+            'type': 'notification.message',
+            'message': message,
+        }
+        await self.send(text_data=json.dumps(message_data))
 
-    def post_logout(self, sender, user, request, **kwargs):
-        message = "logged out"
-        self.send_notification(message)

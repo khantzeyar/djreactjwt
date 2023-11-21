@@ -33,6 +33,7 @@ function SignInCode(){
         alert("Sign In Failed!\n " + error)
     }
   };
+
   //Handling navigation
   useEffect(() => {
     const isAuthenticated = !!localStorage.getItem('accessToken');
@@ -49,14 +50,14 @@ function SignInCode(){
     }
   });
 
+  //Manage the web socket
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8000/ws/auth/");
+    var socket = new WebSocket("ws://localhost:8000/ws/auth/");
     socket.onopen = () => {
       alert("WebSocket connection established.");
     };
     socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      alert(data)
+      alert(event.data)
     };
     socket.onclose = () => {
       alert("WebSocket connection closed.");
