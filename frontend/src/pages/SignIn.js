@@ -13,6 +13,23 @@ function SignInCode(){
   const[password, setPassword] = useState('')
 
   const navigate = useNavigate();
+  var socket = new WebSocket("ws://localhost:8000/ws/auth/");
+
+  //Manage the web socket
+  useEffect(() => {
+    socket.onopen = () => {
+      alert("WebSocket connection established.");
+    };
+    socket.onmessage = (event) => {
+      alert(event.data)
+    };
+    socket.onclose = () => {
+      alert("WebSocket connection closed.");
+    };
+    return () => {
+      socket.close();
+    };
+  }, []);
   
   //Signs In the user through Django
   const handleSignIn = async ()=> {
@@ -21,6 +38,15 @@ function SignInCode(){
             username,
             password
         });
+        //Sign In on Django as well
+        if (socket.readyState === WebSocket.OPEN) {
+          const message = {
+            type: "login",
+            username: username,
+            password: password,
+          };
+          socket.send(JSON.stringify(message));
+        }
         //Store the access token
         const accessToken = response.data.access;
         alert("Sign In Success!\nAccess Token: " + accessToken)
@@ -49,23 +75,6 @@ function SignInCode(){
         }
     }
   });
-
-  //Manage the web socket
-  useEffect(() => {
-    var socket = new WebSocket("ws://localhost:8000/ws/auth/");
-    socket.onopen = () => {
-      alert("WebSocket connection established.");
-    };
-    socket.onmessage = (event) => {
-      alert(event.data)
-    };
-    socket.onclose = () => {
-      alert("WebSocket connection closed.");
-    };
-    return () => {
-      socket.close();
-    };
-  }, []);
 
   //Lets the user visit the Sign Up page if they don't have an account
   const handleSignUp = () => {
