@@ -11,9 +11,9 @@ const RefreshAccessToken = async() =>{
             const newRefreshToken = response.data.refresh;
             localStorage.setItem('accessToken', newAccessToken);
             localStorage.setItem('refreshToken', newRefreshToken);
-            alert('Access token refreshed: ' + newAccessToken);
+            console.log(('Access token refreshed: ' + newAccessToken));
         }catch (error){
-            alert('Token refresh failed!: \n' + error);
+            console.log(alert('Token refresh failed!: \n' + error));
         }
     }
 }

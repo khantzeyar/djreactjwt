@@ -18,10 +18,11 @@ function SignInCode(){
   //Manage the web socket
   useEffect(() => {
     socket.onopen = () => {
-      alert("WebSocket connection established.");
+      console.log("WebSocket connection established.");
     };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
+      console.log(event.data)
       if (message.type === "login"){
         const accessToken = message.access
         const refreshToken = message.refresh
@@ -29,15 +30,14 @@ function SignInCode(){
         localStorage.setItem('refreshToken', refreshToken);
         window.location.reload();
       }
-
     };
     socket.onclose = () => {
-      alert("WebSocket connection closed.");
+      console.log("WebSocket connection closed.");
     };
     return () => {
       socket.close();
     };
-  }, []);
+  });
   
   //Signs In the user through Django
   const handleSignIn = async ()=> {

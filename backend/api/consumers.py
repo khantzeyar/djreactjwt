@@ -33,5 +33,9 @@ class AuthorisationConsumer(AsyncWebsocketConsumer):
                 message_data = {'type': "login", "refresh": str(refresh_token), "access": str(access_token)}
                 await self.send(text_data=json.dumps(message_data))
                 repeat = False
+            else:
+                message_data = {'type': "logout"}
+                await self.send(text_data=json.dumps(message_data))
+                repeat = False
             await asyncio.sleep(1)
 
