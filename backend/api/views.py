@@ -64,7 +64,7 @@ def current_user(request):
     user = request.user
     return Response({'user':user.username})
 
-@receiver(user_logged_in)
+"""@receiver(user_logged_in)
 def post_login(sender, user, request, **kwargs):
     refresh_token = RefreshToken.for_user(user)
     access_token = str(refresh_token.access_token)
@@ -77,4 +77,4 @@ def post_login(sender, user, request, **kwargs):
 def post_logout(sender, user, request, **kwargs):
     print("logged out")
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send("auth_group", {"type": "user.notification", "message": "User logged out."},))
+    async_to_sync(channel_layer.group_send("auth_group", {"type": "user.notification", "message": "User logged out."},))"""

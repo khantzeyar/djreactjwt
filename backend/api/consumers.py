@@ -1,24 +1,21 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-from asgiref.sync import sync_to_async
-from django.contrib.auth import authenticate, login, logout
-from django.http import HttpRequest
-from django.contrib.sessions.middleware import SessionMiddleware
-from django.test import RequestFactory
-
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.core.cache import cache
 
 import json
-
-def get_response(request):
-    return "hello"
+import asyncio
 
 class AuthorisationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
-        await self.channel_layer.group_add("auth_group", self.channel_name)
-        await self.send_hello_world()
+        user_logged_in.connect(self.user_logged_in_handler)
+        user_logged_out.connect(self.user_logged_out_handler)
+        asyncio.create_task(self.send_periodic_messages())
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_discard("auth_group", self.channel_name)
+        user_logged_in.disconnect()
+        user_logged_out.disconnect()
     
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -28,34 +25,34 @@ class AuthorisationConsumer(AsyncWebsocketConsumer):
         if message_type == "login":
             username = data.get("username")
             password = data.get("password")
-            print("username: "+username + "\n" + "password: " + password)
+            print("username: " + username + " password: " + password)
+            
+    def user_logged_in_handler(self, sender, request, user, **kwargs):
+        refresh_token = RefreshToken.for_user(user)
+        access_token = str(refresh_token.access_token)
+        cache.set('message_type', 'login', timeout=60)
+        cache.set('access', access_token, timeout=60)
+        cache.set('refresh', str(refresh_token), timeout=60)
 
-            request_factory = RequestFactory()
-            request = request_factory.get("/")
-            middleware = SessionMiddleware(get_response(request))
-            middleware.process_request(request)
-            await sync_to_async(request.session.save)()
-
-            user = await sync_to_async(authenticate)(request, username=username, password=password)
-            if user is not None:
-                await sync_to_async(login)(request, user)
-                
-        elif message_type == "logout":
-            request_factory = RequestFactory()
-            request = request_factory.get("/")
-            middleware = SessionMiddleware(get_response(request))
-            middleware.process_request(request)
-            await sync_to_async(request.session.save)()
-
-            await sync_to_async(logout)(request)
-
-    async def send_hello_world(self):
-        await self.send_notification("Hello World!")
+    def user_logged_out_handler(self, sender, request, user, **kwargs):
+        cache.set('message_type', 'logout', timeout=60)
     
-    async def send_notification(self, message):
-        message_data = {
-            'type': 'notification.message',
-            'message': message,
-        }
-        await self.send(text_data=json.dumps(message_data))
+    async def send_periodic_messages(self):
+        while True:
+            message_type = cache.get('message_type')
+            if message_type == 'login':
+                message_data = {
+                    'type': message_type,
+                    'access': cache.get('access'),
+                    'refresh': cache.get('refresh'),
+                }
+                await self.send(text_data=json.dumps(message_data))
+                cache.clear()
+            elif message_type == 'logout':
+                message_data = {
+                    'type': message_type,
+                }
+                await self.send(text_data=json.dumps(message_data))
+                cache.clear()
+            await asyncio.sleep(1)
 
