@@ -22,7 +22,6 @@ function SignInCode(){
     };
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data)
-      alert(message.type)
       if (message.type === "login"){
         const accessToken = message.access
         const refreshToken = message.refresh
@@ -30,9 +29,7 @@ function SignInCode(){
         localStorage.setItem('refreshToken', refreshToken);
         window.location.reload();
       }
-      else if (message.type === "logout"){
-        alert("logout")
-      }
+
     };
     socket.onclose = () => {
       alert("WebSocket connection closed.");
