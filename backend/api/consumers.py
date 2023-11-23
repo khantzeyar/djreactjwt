@@ -1,5 +1,9 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.models import User
+from channels.db import database_sync_to_async
+from django.contrib.auth import login, logout
+from django.http import HttpRequest
 
 import json
 import asyncio
@@ -20,9 +24,30 @@ class AuthorisationConsumer(AsyncWebsocketConsumer):
         #When the user signs in from react
         if message_type == "login":
             username = data.get("username")
-            password = data.get("password")
-            print("username: " + username + " password: " + password)
-            
+            user = await self.get_user(username)
+            request = HttpRequest()
+            request.session = self.scope["session"]
+            await self.login_user(request, user)
+            print("Login Test")
+
+        #When the user signs out from react
+        if message_type == "logout":
+            request = HttpRequest()
+            request.session = self.scope["session"]
+            await self.logout_user(request)
+            print("Logout Test")
+
+    @database_sync_to_async
+    def get_user(self, username):
+        return User.objects.filter(username=username).first()
+
+    @database_sync_to_async
+    def login_user(self, request, user,):
+        login(request, user)
+
+    @database_sync_to_async
+    def logout_user(self, request):
+        logout(request)
     
     async def send_periodic_messages(self):
         repeat = True

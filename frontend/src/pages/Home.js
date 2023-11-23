@@ -8,29 +8,6 @@ axios.defaults.withCredentials = true
 function Home() {
   const [user, setUser] = useState('');
 
-  var socket = new WebSocket("ws://localhost:8000/ws/auth/");
-  //Manage the web socket
-  useEffect(() => {
-    socket.onopen = () => {
-      console.log("WebSocket connection established.");
-    };
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data)
-      console.log(event.data)
-      if (message.type === "logout"){
-        localStorage.setItem('logoutRedirect', window.location.pathname);
-        localStorage.removeItem('accessToken');
-        window.location.replace('/signin');
-      }
-    };
-    socket.onclose = () => {
-      console.log("WebSocket connection closed.");
-    };
-    return () => {
-      socket.close();
-    };
-  });
-
   //Displays the user's username when they enter the homepage.
   useEffect(() => {
     RefreshAccessToken();
