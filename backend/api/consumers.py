@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from channels.db import database_sync_to_async
 from django.contrib.auth import login, logout
 from django.http import HttpRequest
-from django.contrib.sessions.models import Session
+
 
 import json
 import asyncio
@@ -16,7 +16,7 @@ class AuthorisationConsumer(AsyncWebsocketConsumer):
         asyncio.create_task(self.send_periodic_messages())
 
     async def disconnect(self, close_code):
-        pass
+         pass
     
     async def receive(self, text_data):
         data = json.loads(text_data)
@@ -41,10 +41,6 @@ class AuthorisationConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_user(self, username):
         return User.objects.filter(username=username).first()
-    
-    @database_sync_to_async
-    def get_sessions(self, user):
-        return Session.objects.filter(session_key__contains=user.id)
 
     @database_sync_to_async
     def login_user(self, request, user,):
