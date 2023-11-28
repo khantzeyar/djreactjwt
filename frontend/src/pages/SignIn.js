@@ -30,6 +30,10 @@ function SignInCode(){
         localStorage.setItem('refreshToken', refreshToken);
         window.location.reload();
       }
+      if (message.type === "logout"){
+        const djangoUrl = "http://localhost:8000/login/"
+        window.location.replace(djangoUrl)
+      }
     };
     socket.onclose = () => {
       console.log("WebSocket connection closed.");

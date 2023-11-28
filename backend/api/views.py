@@ -4,9 +4,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.views.generic import TemplateView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 
 # Create your views here.
 @api_view(['POST'])
@@ -28,6 +30,9 @@ def register(request):
 
     return Response({'access': access_token, 'refresh': str(refresh_token)}, status=status.HTTP_201_CREATED)
 
+class LoginPage(TemplateView):
+    template_name = 'login.html'
+
 class LoginView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -44,7 +49,7 @@ class LoginView(APIView):
             refresh_token = RefreshToken.for_user(user)
             access_token = str(refresh_token.access_token)
 
-            return Response({'access': access_token, 'refresh': str(refresh_token)}, status=status.HTTP_200_OK)
+            return redirect('http://localhost:3000/signin')
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 

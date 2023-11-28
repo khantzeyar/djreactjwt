@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true
 function SignOutButton(){
     var socket = new WebSocket("ws://localhost:8000/ws/auth/");
     //Manage the web socket
-    /*useEffect(() => {
+    useEffect(() => {
         socket.onopen = () => {
             console.log("WebSocket connection established.");
         };
@@ -26,7 +26,7 @@ function SignOutButton(){
         return () => {
             socket.close();
         };
-    });*/
+    });
     //Removes the token to get rid of the user's access. Moves the user to the Sign In page as well.
     const handleSignOut = async () => {
         try{
